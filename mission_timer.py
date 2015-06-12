@@ -271,3 +271,6 @@ def main():
     mission2 = Mission([26,1,2014,12,00], [27,12,2015,12,00], "Test 2")
     myapp = Face(mission2, root)
     root.mainloop()
+
+if __name__ == '__main__':
+    main()
