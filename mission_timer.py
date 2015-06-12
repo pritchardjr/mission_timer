@@ -40,6 +40,8 @@ from Tkconstants import *
 import numpy as np
 #from PIL import Image, ImageTk
 
+#ultimately read in information from a CSV file
+missionfile = "missionfile.csv"
 
 def unpacktime(totalseconds):
     """ There must be an inbuilt function for this
@@ -258,18 +260,54 @@ class Face:
                 timelabel = time.strftime("%d/%m/%y",time.localtime(end))                
             v.set(timelabel)
         
-            
+        #finally begin an autoupdate cycle of the clock faces
         self.parent.after(10, self.updateFaces)
+
+
+def parsemissionfile(filename = missionfile):
+    """
+    Readin the Mission data from a comma separated file containing
+    Name, DD-MM-YYYY, DD-MM-YYYY
+    format entries.
+
+    Returns a list of Mission instances.
+    """
+
+    missions = []
+    file = open(filename)
+    for line in file:
+        data = line.strip().split(',')
+        if len(data) == 3:
+            name = data[0]
+            date1 = data[1].split('-')
+            date2 = data[2].split('-')
+            missions.append(
+                Mission([int(date1[0]),int(date1[1]),int(date1[2]),23,59],
+                        [int(date2[0]),int(date2[1]),int(date2[2]),23,59],
+                        name)
+                )
+    return missions
+            
 
 def main():
     root = Tkinter.Tk()
 
-    mission1 = Mission([26,7,2015,12,00], [27,12,2015,12,00],"Test 1")
-    myapp1 = Face(mission1, root)
+    #mission1 = Mission([26,7,2015,12,00], [27,12,2015,12,00],"Test 1")
+    #myapp1 = Face(mission1, root)
 
     
-    mission2 = Mission([26,1,2014,12,00], [27,12,2015,12,00], "Test 2")
-    myapp = Face(mission2, root)
+    #mission2 = Mission([26,1,2014,12,00], [27,12,2015,12,00], "Test 2")
+    #myapp = Face(mission2, root)
+
+    #read in the mission data from missionfile
+    missions = parsemissionfile(missionfile)
+    myapps = []
+
+    #initialise the clock faces, which triggers an autoupdate cycle
+    for mission in missions:
+        myapps.append(Face(mission, root))
+    
+    
     root.mainloop()
 
 if __name__ == '__main__':
