@@ -194,11 +194,9 @@ class Face:
         self.facenumber = 1
 
         self.cwidth = 10
-        self.cheight = 10
+        self.cheight = 1
         self.parent = parent
         self.mission = mission
-
-        #self.parent.after(10, self.updateFaces)
 
         #frame = Tkinter.Frame(parent, relief=RIDGE, borderwidth=2)
         #frame.pack(fill=BOTH, expand=1)
@@ -286,7 +284,10 @@ def parsemissionfile(filename = missionfile):
                         [int(date2[0]),int(date2[1]),int(date2[2]),23,59],
                         name)
                 )
-    return missions
+
+    #Return missions sorted by the one that will expire soonest
+    return sorted(missions, key=lambda x: x.remainingTime, reverse=False)
+    #return missions
             
 
 def main():
